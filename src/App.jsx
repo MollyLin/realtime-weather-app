@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
+import dayjs from 'dayjs';
 
 import { ReactComponent as DayCloudyIcon } from './assets/day-cloudy.svg';
 import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
@@ -15,6 +16,7 @@ const theme = {
     titleColor: '#212121',
     temperatureColor: '#757575',
     textColor: '#828282',
+    refreshIconColor: '#fcd12a',
   },
   dark: {
     backgroundColor: '#1F2022',
@@ -24,6 +26,7 @@ const theme = {
     titleColor: '#f9f9fa',
     temperatureColor: '#dddddd',
     textColor: '#cccccc',
+    refreshIconColor: '#fcd12a',
   },
 };
 
@@ -122,32 +125,76 @@ const Refresh = styled.div`
     width: 15px;
     height: 15px;
     cursor: pointer;
+    color: ${({ theme }) => theme.textColor};
   }
 `;
 
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState('light');
+  const [currentWeather, setCurrentWeather] = useState({
+    observationTime: '2024-06-07 19:00:00',
+    locationName: '新北市',
+    description: '多雲時晴',
+    windSpeed: 3.6,
+    temperature: 32.1,
+    rainPossibility: 60,
+  });
+
+  const handleClick = () => {
+    // F-C0032-001
+    fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_WEATHERELEMENTS}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&locationName=${encodeURIComponent(import.meta.env.VITE_LOCATION_NAME)}`)
+      .then( (res) => res.json())
+      .then( (data) => {
+        const locationData = data.records.location[0];
+
+        const weatherElements = locationData.weatherElement.reduce(
+          (includeElements, item) => {
+            if(['WDSD', 'TEMP'].includes(item.elementName)) {
+              includeElements[item.elementName] = item.elementValue;
+            }
+            return includeElements;
+          }, {}
+        );
+
+        setCurrentWeather({
+          observationTime: locationData.time.obsTime,
+          locationName: locationData.locationName,
+          temperature: weatherElements.TEMP,
+          windSpeed: weatherElements.WDSD,
+          description: '多雲時晴',
+          rainPossibility: 60,
+        });
+      });
+  }
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <Container>
         <WeatherCard>
-          <Location>台北市</Location>
-          <Description>多雲時晴</Description>
+          <Location>{currentWeather.locationName}</Location>
+          <Description>{currentWeather.Description}</Description>
           <CurrentWeather>
             <Temperature>
-              23 <Celsius>°C</Celsius>
+              {Math.round(currentWeather.temperature)} <Celsius>°C</Celsius>
             </Temperature>
             <DayCloudy />
           </CurrentWeather>
           <AirFlow>
-            <AirFlowIcon /> 23 m/h
+            <AirFlowIcon /> {currentWeather.windSpeed} m/h
           </AirFlow>
           <Rain>
-            <RainIcon /> 48%
+            <RainIcon /> {currentWeather.rainPossibility}%
           </Rain>
-          <Refresh>
-            最後觀測時間：上午 12:03 <RefreshIcon />
+          <Refresh onClick={handleClick}>
+            <span>
+              最後觀測時間：
+              {new Intl.DateTimeFormat('zh-TW', {
+                hour: 'numeric',
+                minute: 'numeric',
+              }).format(dayjs(currentWeather.observationTime))}{''}</span>
+              <div>
+                <RefreshIcon />
+              </div>
           </Refresh>
           <Refresh />
         </WeatherCard>
