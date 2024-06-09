@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 
 import { ReactComponent as DayCloudyIcon } from './assets/day-cloudy.svg';
-import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
+import { ReactComponent as AirFlowIcon } from './assets/windy.svg';
 import { ReactComponent as RainIcon } from './assets/rain.svg';
 import { ReactComponent as RefreshIcon } from './assets/refresh.svg';
 import { ReactComponent as LoadingIcon } from './assets/loading.svg';
@@ -122,10 +122,11 @@ const Refresh = styled.div`
   color: ${({ theme }) => theme.textColor};
 
   svg{
-    margin-left: 10px;
-    width: 15px;
-    height: 15px;
+    margin-left: 5px;
+    width: 20px;
+    height: auto;
     cursor: pointer;
+    fill: ${({ theme }) => theme.refreshIconColor};
     animation: rotate infinite 1.5s linear;
     animation-duration: ${({ isLoading }) => (isLoading ? '1.5s' : '0s')};
   }
@@ -162,7 +163,7 @@ const App = () => {
       .then( (res) => res.json())
       .then( (data) => {
         const locationData = data.records.Station[0];
-        console.log(locationData.ObsTime);
+
         setCurrentWeather({
           observationTime: locationData.ObsTime.DateTime,
           locationName: locationData.GeoInfo.TownName,
@@ -196,7 +197,7 @@ const App = () => {
             <AirFlowIcon /> {windSpeed} m/h
           </AirFlow>
           <Rain>
-            {/* <RainIcon /> {rainPossibility}% */}
+            { <RainIcon /> /* {rainPossibility}% */ }
           </Rain>
           <Refresh onClick={fetchCurrentWeather} isLoading={isLoading}>
             <span>
