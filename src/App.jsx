@@ -145,12 +145,16 @@ const App = () => {
   const [currentWeather, setCurrentWeather] = useState({
     observationTime: '2024-1-1',
     locationName: '',
+    description: '',
+    comfortably: '',
+    rainPossibility: 0,
     windSpeed: 0,
     temperature: 0,
     isLoading: true,
   });
   useEffect(() => {
     fetchCurrentWeather();
+    fetchWeatherForecast();
   }, []);
 
   const fetchCurrentWeather = () => {
@@ -173,9 +177,40 @@ const App = () => {
         });
       });
   }
+
+  const fetchWeatherForecast = () => {
+    fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_WEATHER_FORECAST}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&locationName=${encodeURIComponent(import.meta.env.VITE_LOCATION_NAME)}&elementName=Wx,PoP,CI`)
+      .then( (res) => res.json())
+      .then( (data) => {
+        const locationData = data.records.location[0];
+
+        const weatherElements = locationData.weatherElement.reduce(
+          (neededElements, item) => {
+            if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
+              neededElements[item.elementName] = item.time[0].parameter;
+            }
+            return neededElements;
+          },
+          {}
+        );
+
+        setCurrentWeather((prevState) => ({
+          ...prevState,
+          description: weatherElements.Wx.parameterName,
+          weatherCode: weatherElements.Wx.parameterValue,
+          rainPossibility: weatherElements.PoP.parameterName,
+          comfortably: weatherElements.CI.parameterName,
+        }));
+
+      });
+  };
+
   const {
     observationTime,
     locationName,
+    description,
+    comfortably,
+    rainPossibility,
     windSpeed,
     temperature,
     isLoading,
@@ -186,7 +221,9 @@ const App = () => {
       <Container>
         <WeatherCard>
           <Location>{locationName}</Location>
-          {/* <Description>{description}</Description> */}
+          <Description>
+            {description} {comfortably}
+          </Description>
           <CurrentWeather>
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
@@ -197,16 +234,22 @@ const App = () => {
             <AirFlowIcon /> {windSpeed} m/h
           </AirFlow>
           <Rain>
-            { <RainIcon /> /* {rainPossibility}% */ }
+            <RainIcon /> {rainPossibility}%
           </Rain>
-          <Refresh onClick={fetchCurrentWeather} isLoading={isLoading}>
+          <Refresh 
+            onClick={() => {
+              fetchCurrentWeather();
+              fetchWeatherForecast();
+            }}
+            isLoading={isLoading}>
             <span>
               最後觀測時間：
               {new Intl.DateTimeFormat('zh-TW', {
                 hour: 'numeric',
                 minute: 'numeric',
-              }).format(dayjs(observationTime))}{''}</span>
-              {isLoading ? <LoadingIcon/> : <RefreshIcon />}
+              }).format(dayjs(observationTime))}{''}
+            </span>
+            {isLoading ? <LoadingIcon/> : <RefreshIcon />}
           </Refresh>
           <Refresh />
         </WeatherCard>
