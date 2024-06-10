@@ -140,10 +140,51 @@ const Refresh = styled.div`
   }
 `;
 
+const fetchCurrentWeather = () => {
+  return fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_CURRENT_WEATHER}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&StationId=${import.meta.env.VITE_ZHONGHE_STATION_ID}&WeatherElement=&GeoInfo=`)
+    .then( (res) => res.json())
+    .then( (data) => {
+      const locationData = data.records.Station[0];
+
+      return {
+        observationTime: locationData.ObsTime.DateTime,
+        locationName: locationData.GeoInfo.TownName,
+        temperature: locationData.WeatherElement.AirTemperature,
+        windSpeed: locationData.WeatherElement.WindSpeed,
+        isLoading: false,
+      };
+    });
+}
+
+const fetchWeatherForecast = () => {
+  return fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_WEATHER_FORECAST}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&locationName=${encodeURIComponent(import.meta.env.VITE_LOCATION_NAME)}&elementName=Wx,PoP,CI`)
+    .then( (res) => res.json())
+    .then( (data) => {
+      const locationData = data.records.location[0];
+
+      const weatherElements = locationData.weatherElement.reduce(
+        (neededElements, item) => {
+          if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
+            neededElements[item.elementName] = item.time[0].parameter;
+          }
+          return neededElements;
+        },
+        {}
+      );
+
+      return {
+        description: weatherElements.Wx.parameterName,
+        weatherCode: weatherElements.Wx.parameterValue,
+        rainPossibility: weatherElements.PoP.parameterName,
+        comfortably: weatherElements.CI.parameterName,
+      };
+    });
+};
+
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState('light');
   const [currentWeather, setCurrentWeather] = useState({
-    observationTime: '2024-1-1',
+    observationTime: new Date(),
     locationName: '',
     description: '',
     comfortably: '',
@@ -152,58 +193,27 @@ const App = () => {
     temperature: 0,
     isLoading: true,
   });
+
   useEffect(() => {
-    fetchCurrentWeather();
-    fetchWeatherForecast();
+    const fetchData = async () => {
+      setCurrentWeather((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
+
+      const [currentWeather, weatherForecast] = await Promise.all([
+        fetchCurrentWeather(),
+        fetchWeatherForecast(),
+      ]);
+
+      setCurrentWeather({
+        ...currentWeather,
+        ...weatherForecast,
+        isLoading: false,
+      });
+    };
+    fetchData();
   }, []);
-
-  const fetchCurrentWeather = () => {
-    setCurrentWeather((prevState) => ({
-      ...prevState,
-      isLoading: true,
-    }));
-
-    fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_CURRENT_WEATHER}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&StationId=${import.meta.env.VITE_ZHONGHE_STATION_ID}&WeatherElement=&GeoInfo=`)
-      .then( (res) => res.json())
-      .then( (data) => {
-        const locationData = data.records.Station[0];
-
-        setCurrentWeather({
-          observationTime: locationData.ObsTime.DateTime,
-          locationName: locationData.GeoInfo.TownName,
-          temperature: locationData.WeatherElement.AirTemperature,
-          windSpeed: locationData.WeatherElement.WindSpeed,
-          isLoading: false,
-        });
-      });
-  }
-
-  const fetchWeatherForecast = () => {
-    fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_WEATHER_FORECAST}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&locationName=${encodeURIComponent(import.meta.env.VITE_LOCATION_NAME)}&elementName=Wx,PoP,CI`)
-      .then( (res) => res.json())
-      .then( (data) => {
-        const locationData = data.records.location[0];
-
-        const weatherElements = locationData.weatherElement.reduce(
-          (neededElements, item) => {
-            if (['Wx', 'PoP', 'CI'].includes(item.elementName)) {
-              neededElements[item.elementName] = item.time[0].parameter;
-            }
-            return neededElements;
-          },
-          {}
-        );
-
-        setCurrentWeather((prevState) => ({
-          ...prevState,
-          description: weatherElements.Wx.parameterName,
-          weatherCode: weatherElements.Wx.parameterValue,
-          rainPossibility: weatherElements.PoP.parameterName,
-          comfortably: weatherElements.CI.parameterName,
-        }));
-
-      });
-  };
 
   const {
     observationTime,
