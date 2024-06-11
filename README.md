@@ -7,15 +7,18 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+- React v18.2 + Vite v5.2
+
 ## 開發筆記
 
-#### SVG Component
+### SVG Component
 
 - Create React App 在引入圖片檔時，預設即支援將 `.svg` 作為 React 組件導入，其寫法為:
 ``` javascript
 import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
 ```
 - Vite React App:
+
 step1:
 ``` bash
 npm install @svgr/rollup --save-dev
@@ -35,14 +38,14 @@ step3:
 import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
 ```
 
-#### 將 API 請求與元件脫鉤的好處
+### 將 API 請求與元件脫鉤的好處
 - 能更精準範圍測試
 - 提昇程式碼重用性
 - 關注點分離 (Separation of Concerns)，使元件只關注如何顯示資料
 - 更單純的元件邏輯
 上方列的結論: 讓函式與元件的資料狀態解耦，以利未來程式的拆檔與管理
 
-#### when use `useMemo` and `useCallback` ?
+### when use `useMemo` and `useCallback` ?
 > There are specific reasons both of these hooks are built-into React:
 > - Referential equality
 >   - 是否參照到同一個記憶體位置
@@ -68,6 +71,6 @@ Ref:
 - [Kent C.dodds's Blog](https://kentcdodds.com/blog/usememo-and-usecallback#so-when-should-i-usememo-and-usecallback)
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
 
-## 天氣相關資料
+### 天氣相關資料
 - 中央氣象局提供的「[預報產品天氣描述代碼表](https://opendata.cwa.gov.tw/opendatadoc/MFC/D0047.pdf) 」from page 4。
 - SVG icon from [IconFinder](https://www.iconfinder.com/iconsets/the-weather-is-nice-today) and [SvgRepo](https://www.svgrepo.com/)

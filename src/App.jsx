@@ -177,6 +177,39 @@ const fetchWeatherForecast = () => {
     });
 };
 
+const fetchSunriseAndSunset = () => {
+  return fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_SUNRISE_SUNSET}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&locationName=${encodeURIComponent(import.meta.env.VITE_LOCATION_NAME)}`)
+    .then( (res) => res.json())
+    .then( (data) => {
+
+      const now = new Date();
+      const formatDate = Intl.DateTimeFormat('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(now).replace(/\//g, '-');
+
+      if(!data) {
+        throw new Error(`找不到${import.meta.env.VITE_LOCATION_NAME}在${formatDate}的日出日落資料`);
+      }
+
+      const locationTime = data?.records?.locations?.location;
+      const locationDate = locationTime.time.find((time) => time.Date === formatDate);
+
+      // 將 Date 物件轉為  Unix time stamp
+      const nowDateTimestamp = now.getTime();
+      const sunriseTimestamp = new Date(`${locationDate.Date} ${locationDate.SunRiseTime}`).getTime();
+      const sunsetTimestamp = new Date(`${locationDate.Date} ${locationDate.SunSetTime}`).getTime();
+
+      const isDayTime = sunriseTimestamp <= nowDateTimestamp && nowDateTimestamp <= sunsetTimestamp
+
+      return {
+        isLoading: false,
+      }
+
+    })
+};
+
 const App = () => {
   const [currentTheme, setCurrentTheme] = useState('light');
   const [currentWeather, setCurrentWeather] = useState({
@@ -201,6 +234,7 @@ const App = () => {
     const [currentWeather, weatherForecast] = await Promise.all([
       fetchCurrentWeather(),
       fetchWeatherForecast(),
+      fetchSunriseAndSunset(),
     ]);
 
     setCurrentWeather({
