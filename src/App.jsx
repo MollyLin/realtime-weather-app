@@ -3,11 +3,11 @@ import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 
-import { ReactComponent as DayCloudyIcon } from './assets/day-cloudy.svg';
 import { ReactComponent as AirFlowIcon } from './assets/windy.svg';
 import { ReactComponent as RainIcon } from './assets/rain.svg';
 import { ReactComponent as RefreshIcon } from './assets/refresh.svg';
 import { ReactComponent as LoadingIcon } from './assets/loading.svg';
+import WeatherIcon from './components/WeatherIcon';
 
 const theme = {
   light: {
@@ -106,10 +106,6 @@ const Rain = styled.div`
     height: auto;
     margin-right: 30px;
   }
-`;
-
-const DayCloudy = styled(DayCloudyIcon)`
-  flex-basis: 30%;
 `;
 
 const Refresh = styled.div`
@@ -240,7 +236,7 @@ const App = () => {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <DayCloudy />
+            <WeatherIcon />
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
