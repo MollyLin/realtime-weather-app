@@ -184,6 +184,7 @@ const App = () => {
     locationName: '',
     description: '',
     comfortably: '',
+    weatherCode: 0,
     rainPossibility: 0,
     windSpeed: 0,
     temperature: 0,
@@ -218,6 +219,7 @@ const App = () => {
     locationName,
     description,
     comfortably,
+    weatherCode,
     rainPossibility,
     windSpeed,
     temperature,
@@ -236,7 +238,7 @@ const App = () => {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <WeatherIcon />
+            <WeatherIcon weatherCode={weatherCode} moment="night" />
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h

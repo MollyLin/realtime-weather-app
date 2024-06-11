@@ -50,6 +50,20 @@ import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
 >   - 原因: 比較 useCallback 中的 dependencies 陣列元素是否相同可能會消耗更多效能
 > - 為了比較 useCallback 中的 dependencies 陣列元素是否相同還可能會消耗更多效能，因此多數的時候並不需要使用到 useCallback 這個方法。
 
+``` javascript
+// useCallback(fn, dependencies)
+const memoizedFunction = useCallback(() => {
+  doSomething(a, b);
+}, [a, b]);
+
+// useMemo(calculateValue, dependencies)
+// This type of caching is called memoization.
+const memoizedValue = useMemo(() => {
+  const result = computeExpensiveValue(a, b);
+  return result;
+}, [a, b]);
+```
+
 Ref:
 - [Kent C.dodds's Blog](https://kentcdodds.com/blog/usememo-and-usecallback#so-when-should-i-usememo-and-usecallback)
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
