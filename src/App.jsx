@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
@@ -193,27 +193,29 @@ const App = () => {
     temperature: 0,
     isLoading: true,
   });
+  // 當函式需要共用時，可以拉到 useEffect 外
+  // 以此天氣 APP 的規模來看，useCallback 可斟酌使用
+  const fetchData = useCallback(async () => {
+    setCurrentWeather((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+
+    const [currentWeather, weatherForecast] = await Promise.all([
+      fetchCurrentWeather(),
+      fetchWeatherForecast(),
+    ]);
+
+    setCurrentWeather({
+      ...currentWeather,
+      ...weatherForecast,
+      isLoading: false,
+    });
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setCurrentWeather((prevState) => ({
-        ...prevState,
-        isLoading: true,
-      }));
-
-      const [currentWeather, weatherForecast] = await Promise.all([
-        fetchCurrentWeather(),
-        fetchWeatherForecast(),
-      ]);
-
-      setCurrentWeather({
-        ...currentWeather,
-        ...weatherForecast,
-        isLoading: false,
-      });
-    };
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const {
     observationTime,
@@ -246,7 +248,7 @@ const App = () => {
           <Rain>
             <RainIcon /> {rainPossibility}%
           </Rain>
-          <Refresh 
+          <Refresh
             onClick={() => {
               fetchCurrentWeather();
               fetchWeatherForecast();
