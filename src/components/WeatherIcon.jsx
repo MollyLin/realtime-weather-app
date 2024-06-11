@@ -76,15 +76,14 @@ const weatherCodeToType = (weatherCode) => {
     Object.entries(weatherTypes).find(([weatherType, weatherCodes]) =>
       weatherCodes.includes(Number(weatherCode))
     ) || [];
-
-    return weatherType;
+  return weatherType;
 };
 
 const WeatherIcon = ({ weatherCode, moment }) => {
-  const weatherType = useMemo(() => weatherCodeToType(weatherCode),[ weatherCode]);
-  const weatherIcon = weatherType[moment][weatherType];
+  const weatherType = useMemo(() => weatherCodeToType(weatherCode),[weatherCode]);
+  const currentWeatherIcon = weatherIcons[moment][weatherType];
 
-  return <IconContainer>{weatherIcon}</IconContainer>
+  return <IconContainer>{currentWeatherIcon}</IconContainer>
 };
 
 export default WeatherIcon;

@@ -247,10 +247,7 @@ const App = () => {
             <RainIcon /> {rainPossibility}%
           </Rain>
           <Refresh
-            onClick={() => {
-              fetchCurrentWeather();
-              fetchWeatherForecast();
-            }}
+            onClick={fetchData}
             isLoading={isLoading}>
             <span>
               最後觀測時間：
