@@ -1,17 +1,17 @@
-import { ReactComponent as DayClear } from './../images/day-clear.svg';
-import { ReactComponent as DayCloudy } from './../images/day-cloudy.svg';
-import { ReactComponent as DayCloudyFog } from './../images/day-cloudy-fog.svg';
-import { ReactComponent as DayFog } from './../images/day-fog.svg';
-import { ReactComponent as DayPartiallyClearWithRain } from './../images/day-partially-clear-with-rain.svg';
-import { ReactComponent as DaySnowing } from './../images/day-snowing.svg';
-import { ReactComponent as DayThunderstorm } from './../images/day-thunderstorm.svg';
-import { ReactComponent as NightClear } from './../images/night-clear.svg';
-import { ReactComponent as NightCloudy } from './../images/night-cloudy.svg';
-import { ReactComponent as NightCloudyFog } from './../images/night-cloudy-fog.svg';
-import { ReactComponent as NightFog } from './../images/night-fog.svg';
-import { ReactComponent as NightPartiallyClearWithRain } from './../images/night-partially-clear-with-rain.svg';
-import { ReactComponent as NightSnowing } from './../images/night-snowing.svg';
-import { ReactComponent as NightThunderstorm } from './../images/night-thunderstorm.svg';
+import { ReactComponent as DayClear } from './../assets/day-clear.svg';
+import { ReactComponent as DayCloudy } from './../assets/day-cloudy.svg';
+import { ReactComponent as DayCloudyFog } from './../assets/day-cloudy-fog.svg';
+import { ReactComponent as DayFog } from './../assets/day-fog.svg';
+import { ReactComponent as DayPartiallyClearWithRain } from './../assets/day-partially-clear-with-rain.svg';
+import { ReactComponent as DaySnowing } from './../assets/day-snowing.svg';
+import { ReactComponent as DayThunderstorm } from './../assets/day-thunderstorm.svg';
+import { ReactComponent as NightClear } from './../assets/night-clear.svg';
+import { ReactComponent as NightCloudy } from './../assets/night-cloudy.svg';
+import { ReactComponent as NightCloudyFog } from './../assets/night-cloudy-fog.svg';
+import { ReactComponent as NightFog } from './../assets/night-fog.svg';
+import { ReactComponent as NightPartiallyClearWithRain } from './../assets/night-partially-clear-with-rain.svg';
+import { ReactComponent as NightSnowing } from './../assets/night-snowing.svg';
+import { ReactComponent as NightThunderstorm } from './../assets/night-thunderstorm.svg';
 import styled from '@emotion/styled';
 
 const IconContainer = styled.div`
@@ -72,7 +72,7 @@ const weatherIcons = {
 const weatherCodeToType = (weatherCode) => {
   const [weatherType] =
     Object.entries(weatherTypes).find(([weatherType, weatherCodes]) =>
-      weatherCode.includes(Number(weatherCode))
+      weatherCodes.includes(Number(weatherCode))
     ) || [];
 
     return weatherType;

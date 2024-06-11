@@ -53,3 +53,7 @@ import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
 Ref:
 - [Kent C.dodds's Blog](https://kentcdodds.com/blog/usememo-and-usecallback#so-when-should-i-usememo-and-usecallback)
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
+
+## 天氣相關資料
+- 中央氣象局提供的「[預報產品天氣描述代碼表](https://opendata.cwa.gov.tw/opendatadoc/MFC/D0047.pdf) 」from page 4。
+- SVG icon from [IconFinder](https://www.iconfinder.com/iconsets/the-weather-is-nice-today) and [SvgRepo](https://www.svgrepo.com/)
