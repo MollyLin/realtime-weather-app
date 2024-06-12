@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
@@ -10,7 +10,7 @@ import { ReactComponent as LoadingIcon } from './assets/loading.svg';
 import WeatherIcon from './components/WeatherIcon';
 
 const theme = {
-  light: {
+  day: {
     backgroundColor: '#ededed',
     foregroundColor: '#f9f9f9',
     boxShadow: '0 1px 3px 0 #999999',
@@ -19,7 +19,7 @@ const theme = {
     textColor: '#828282',
     refreshIconColor: '#fcd12a',
   },
-  dark: {
+  night: {
     backgroundColor: '#1F2022',
     foregroundColor: '#121416',
     boxShadow:
@@ -193,25 +193,21 @@ const fetchSunriseAndSunset = () => {
         throw new Error(`找不到${import.meta.env.VITE_LOCATION_NAME}在${formatDate}的日出日落資料`);
       }
 
-      const locationTime = data?.records?.locations?.location;
+      const locationTime = data?.records?.locations?.location[0];
       const locationDate = locationTime.time.find((time) => time.Date === formatDate);
 
-      // 將 Date 物件轉為  Unix time stamp
+      // 將 Date 物件轉為  Unix time stamp 以取得目前太陽狀態
       const nowDateTimestamp = now.getTime();
       const sunriseTimestamp = new Date(`${locationDate.Date} ${locationDate.SunRiseTime}`).getTime();
       const sunsetTimestamp = new Date(`${locationDate.Date} ${locationDate.SunSetTime}`).getTime();
 
-      const isDayTime = sunriseTimestamp <= nowDateTimestamp && nowDateTimestamp <= sunsetTimestamp
-
-      return {
-        isLoading: false,
-      }
-
+      const isDayTime = sunriseTimestamp <= nowDateTimestamp && nowDateTimestamp <= sunsetTimestamp;
+      return isDayTime ? 'day' : 'night';
     })
 };
 
 const App = () => {
-  const [currentTheme, setCurrentTheme] = useState('light');
+  const [currentTheme, setCurrentTheme] = useState('day');
   const [currentWeather, setCurrentWeather] = useState({
     observationTime: new Date(),
     locationName: '',
@@ -223,6 +219,15 @@ const App = () => {
     temperature: 0,
     isLoading: true,
   });
+
+  useEffect(() => {
+    const fetchMoment = async () => {
+      const momentResult = await fetchSunriseAndSunset();
+      setCurrentTheme(momentResult);
+    };
+    fetchMoment();
+  }, []);
+
   // 當函式需要共用時，可以拉到 useEffect 外
   // 以此天氣 APP 的規模來看，useCallback 可斟酌使用
   const fetchData = useCallback(async () => {
@@ -234,7 +239,6 @@ const App = () => {
     const [currentWeather, weatherForecast] = await Promise.all([
       fetchCurrentWeather(),
       fetchWeatherForecast(),
-      fetchSunriseAndSunset(),
     ]);
 
     setCurrentWeather({
@@ -242,6 +246,7 @@ const App = () => {
       ...weatherForecast,
       isLoading: false,
     });
+
   }, []);
 
   useEffect(() => {
@@ -272,7 +277,7 @@ const App = () => {
             <Temperature>
               {Math.round(temperature)} <Celsius>°C</Celsius>
             </Temperature>
-            <WeatherIcon weatherCode={weatherCode} moment="night" />
+            <WeatherIcon weatherCode={weatherCode} moment={currentTheme} />
           </CurrentWeather>
           <AirFlow>
             <AirFlowIcon /> {windSpeed} m/h
