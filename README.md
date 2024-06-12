@@ -1,4 +1,4 @@
-# React + Vite
+## React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -10,6 +10,11 @@ Currently, two official plugins are available:
 - React v18.2 + Vite v5.2
 
 ## 開發筆記
+
+此網站天氣資訊來源為中央氣象局，總共呼叫了 3 支 API，分別為:
+- 觀測中的 `/O-A0001-001`，取得中和區的氣溫與風速
+- 預報中的 `/F-C0032-001`，取得新北市的天氣描述、降雨機率及體感舒適度
+- 日出日落 `/A-B0062-001`，根據新北市當日的日出日落時間與當前時間比對是否為白天或夜晚，以改變亮／暗主題配色
 
 ### SVG Component
 
@@ -72,5 +77,6 @@ Ref:
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
 
 ### 天氣相關資料
+- [中央氣象署開放資料平臺之資料擷取API](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
 - 中央氣象局提供的「[預報產品天氣描述代碼表](https://opendata.cwa.gov.tw/opendatadoc/MFC/D0047.pdf) 」from page 4。
 - SVG icon from [IconFinder](https://www.iconfinder.com/iconsets/the-weather-is-nice-today) and [SvgRepo](https://www.svgrepo.com/)
