@@ -31,7 +31,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Use secret
-        uses: echo "The secret is ${{ secrets.VITE_AUTHORIZATION_KEY }}"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+        env:
+          AUTHORIZATION_KEY: ${{ secrets.VITE_AUTHORIZATION_KEY }}
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
