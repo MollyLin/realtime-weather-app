@@ -4,6 +4,6 @@ import svgr from '@svgr/rollup'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/realtime-weather-app/',
+  base: '/realtime-weather-app',
   plugins: [react(), svgr()],
 })
