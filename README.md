@@ -88,12 +88,17 @@ const memoizedValue = useMemo(() => {
 Ref:
 - [Kent C.dodds's Blog](https://kentcdodds.com/blog/usememo-and-usecallback#so-when-should-i-usememo-and-usecallback)
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
-- 《React 思維進化》/ 周昱安 Zet
+- 《 React 思維進化 》/ 周昱安 Zet
 
 ### `.find()` > `new Map()`
-研讀此篇文章[Stop Using find() Method in JavaScript](https://medium.com/codex/stop-using-find-method-in-javascript-dfdb40b10821)討論到 JS Array 效能問題，因此將原先 `.find()` 改寫為使用接近 O(1) 的 Map() 處理日出日落資料。(src/hooks/useWeatherAPI.jsx, fetchSunriseAndSunset())
+研讀此篇文章 [Stop Using find() Method in JavaScript](https://medium.com/codex/stop-using-find-method-in-javascript-dfdb40b10821) 討論到 JS Array 效能問題，因此將原先 `.find()` 改寫為使用接近 O(1) 的 Map() 處理日出日落資料。(src/hooks/useWeatherAPI.jsx, fetchSunriseAndSunset())
 
 ### 天氣相關資料
 - [中央氣象署開放資料平臺之資料擷取API](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
-- 中央氣象局提供的「[預報產品天氣描述代碼表](https://opendata.cwa.gov.tw/opendatadoc/MFC/D0047.pdf) 」from page 4。
+- 中央氣象局提供的 [預報產品天氣描述代碼表](https://opendata.cwa.gov.tw/opendatadoc/MFC/D0047.pdf) from page 4。
 - SVG icon from [IconFinder](https://www.iconfinder.com/iconsets/the-weather-is-nice-today) and [SvgRepo](https://www.svgrepo.com/)
+
+### News
+> All GitHub Pages builds will use GitHub Actions from June 30, 2024. No other changes are required but GitHub Actions must be enabled in your repository for builds to continue. For more information on enabling GitHub Actions, see ["Managing GitHub Actions settings for a repository."](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)
+
+Ref: [Configure publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
