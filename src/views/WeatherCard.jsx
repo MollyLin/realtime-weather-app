@@ -6,6 +6,7 @@ import { ReactComponent as AirFlowIcon } from './../assets/windy.svg';
 import { ReactComponent as RainIcon } from './../assets/rain.svg';
 import { ReactComponent as RefreshIcon } from './../assets/refresh.svg';
 import { ReactComponent as LoadingIcon } from './../assets/loading.svg';
+import { formatDate } from './../helpers/formatDate';
 
 const WeatherCardWrapper = styled.div`
   position: relative;
@@ -139,10 +140,10 @@ const WeatherCard = ({ currentWeather, moment, fetchData }) => {
         isLoading={isLoading}>
         <span>
           最後觀測時間：
-          {new Intl.DateTimeFormat('zh-TW', {
+          {formatDate(dayjs(observationTime), {
             hour: 'numeric',
             minute: 'numeric',
-          }).format(dayjs(observationTime))}{''}
+          })}
         </span>
         {isLoading ? <LoadingIcon/> : <RefreshIcon />}
       </Refresh>

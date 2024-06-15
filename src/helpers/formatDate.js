@@ -1,0 +1,1 @@
+export const formatDate = (date, options) => new Intl.DateTimeFormat('zh-TW', options).format(date);

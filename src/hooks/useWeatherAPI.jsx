@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { formatDate } from '../helpers/formatDate';
 
 const fetchCurrentWeather = () => {
   return fetch(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/${import.meta.env.VITE_CURRENT_WEATHER}?Authorization=${import.meta.env.VITE_AUTHORIZATION_KEY}&StationId=${import.meta.env.VITE_ZHONGHE_STATION_ID}&WeatherElement=&GeoInfo=`)
@@ -47,21 +48,18 @@ const fetchSunriseAndSunset = () => {
     .then( (data) => {
 
       const now = new Date();
-      const formatDate = Intl.DateTimeFormat('zh-TW', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(now).replace(/\//g, '-');
+      const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formatCurrentDate = formatDate(now, dateOptions).replace(/\//g, '-');
 
       if(!data) {
-        throw new Error(`找不到${import.meta.env.VITE_LOCATION_NAME}在${formatDate}的日出日落資料`);
+        throw new Error(`找不到${import.meta.env.VITE_LOCATION_NAME}在${formatCurrentDate}的日出日落資料`);
       }
 
       const locationTime = data?.records?.locations?.location[0];
       // 將當下時間資料轉為 Map 以便查找 ; keys(time.Date) are unique
       const locationDateMap = new Map(locationTime.time.map(time => [time.Date, time]));
       // 使用當下的時間去搜尋 res.data 中對應的日出日落時間
-      const locationDate = locationDateMap.get(formatDate);
+      const locationDate = locationDateMap.get(formatCurrentDate);
 
       // 將 Date 物件轉為  Unix time stamp 以取得目前太陽狀態
       const nowDateTimestamp = now.getTime();
