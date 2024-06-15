@@ -58,7 +58,9 @@ const fetchSunriseAndSunset = () => {
       }
 
       const locationTime = data?.records?.locations?.location[0];
-      const locationDate = locationTime.time.find((time) => time.Date === formatDate);
+      // 將當下時間資料轉為 Map 以便查找
+      const locationDateMap = new Map(locationTime.time.map(time => [time.Date, time]));
+      const locationDate = locationDateMap.get(formatDate);
 
       // 將 Date 物件轉為  Unix time stamp 以取得目前太陽狀態
       const nowDateTimestamp = now.getTime();
@@ -94,6 +96,7 @@ const useWeatherAPI = () => {
 
   // 當函式需要共用時，可以拉到 useEffect 外
   // 以此天氣 APP 的規模來看，useCallback 可斟酌使用
+  // 這裡的 fetchData 有被 useCallback 包裹，是因為 fetchData 有被 useEffect 呼叫且會被傳入 component
   const fetchData = useCallback(async () => {
     setCurrentWeather((prevState) => ({
       ...prevState,
