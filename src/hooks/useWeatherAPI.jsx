@@ -58,8 +58,9 @@ const fetchSunriseAndSunset = () => {
       }
 
       const locationTime = data?.records?.locations?.location[0];
-      // 將當下時間資料轉為 Map 以便查找
+      // 將當下時間資料轉為 Map 以便查找 ; keys(time.Date) are unique
       const locationDateMap = new Map(locationTime.time.map(time => [time.Date, time]));
+      // 使用當下的時間去搜尋 res.data 中對應的日出日落時間
       const locationDate = locationDateMap.get(formatDate);
 
       // 將 Date 物件轉為  Unix time stamp 以取得目前太陽狀態

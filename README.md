@@ -50,6 +50,19 @@ import { ReactComponent as AirFlowIcon } from './assets/airFlow.svg';
 - 更單純的元件邏輯
 上方列的結論: 讓函式與元件的資料狀態解耦，以利未來程式的拆檔與管理
 
+### 簡短定義 `useEffect`、`useCallback`、`useMemo`、`memo`
+- `useEffect`: 當依賴的資料沒有更新時跳過處理。
+- `useCallback`: 讓資料流的變化連動反應到函式的變化。
+  - 使用時機:
+    - 當一個 component 裡的函式有被 effect 函式呼叫時。 ex: 本專案的 `fetchData()`
+    - 會透過 prop 來傳給一個 memo 過的子 component 時。
+- `useMemo`: 用來快取陣列或物件類型的資料
+- `memo`: 快取 component render 的畫面結果並重用以節省效能成本，是 React 內建的 HOC。
+
+### 何謂 HOC(higher order component)?
+會接受一個 component 作為參數，然後回傳一個加工過的全新 component。目的是使我們更輕易擴充和重用 component 邏輯。
+
+
 ### when use `useMemo` and `useCallback` ?
 > There are specific reasons both of these hooks are built-into React:
 > - Referential equality
@@ -75,6 +88,10 @@ const memoizedValue = useMemo(() => {
 Ref:
 - [Kent C.dodds's Blog](https://kentcdodds.com/blog/usememo-and-usecallback#so-when-should-i-usememo-and-usecallback)
 - [是否有必要使用 useCallback？](https://pjchender.dev/react-bootcamp/docs/book/ch5/5-8#%E6%98%AF%E5%90%A6%E6%9C%89%E5%BF%85%E8%A6%81%E4%BD%BF%E7%94%A8-usecallback%EF%BC%9F)
+- 《React 思維進化》/ 周昱安 Zet
+
+### `.find()` > `new Map()`
+研讀此篇文章[Stop Using find() Method in JavaScript](https://medium.com/codex/stop-using-find-method-in-javascript-dfdb40b10821)討論到 JS Array 效能問題，因此將原先 `.find()` 改寫為使用接近 O(1) 的 Map() 處理日出日落資料。(src/hooks/useWeatherAPI.jsx, fetchSunriseAndSunset())
 
 ### 天氣相關資料
 - [中央氣象署開放資料平臺之資料擷取API](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
